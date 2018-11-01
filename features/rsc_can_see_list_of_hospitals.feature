@@ -12,7 +12,7 @@ Background:
 Scenario: 
 Given I am on the landing page
 When I click on the link "Hospitals"
-Then I should see " Karolinska "
+Then I should see "Karolinska"
 And I should not see "St. Mary"
 
 
