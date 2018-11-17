@@ -1,11 +1,11 @@
 class HospitalsController < ApplicationController
   
   def index
-    @hospitals = Hospital.all
+    @hospitals = policy_scope(Hospital)
   end
 
   def create
-    hospital = Hospital.create(hospital_params)
+    hospital = Hospital.create(hospital_params.merge(region: current_user.region))
     if hospital.persisted?
       redirect_to hospitals_path, notice: 'Hospital added'
     else
@@ -13,9 +13,17 @@ class HospitalsController < ApplicationController
     end
   end 
 
+  def destroy
+    if Hospital.find(params[:id]).destroy
+      redirect_to hospitals_path, notice: 'Hospital was successfully removed.'
+    else
+      redirect_to hospitals_path, notice: 'Something went wrong, Hospital not removed.'
+    end
+  end
+
   private
 
   def hospital_params
-    params.require(:hospital).permit(:name)
+    params.require(:hospital).permit(:name, :region)
   end
 end

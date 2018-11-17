@@ -39,3 +39,11 @@ end
 Then("I select a region option") do
   select "stockholm", from: "Region"
 end
+
+Given("I wait {int} second(s)") do |int|
+  sleep int
+end
+
+Then("I confirm popup") do
+  page.driver.browser.switch_to.alert.accept
+end

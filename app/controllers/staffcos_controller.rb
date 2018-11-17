@@ -2,16 +2,24 @@
 
 class StaffcosController < ApplicationController
   def index
-    @staffcos = Staffco.all
+    @staffcos = policy_scope(Staffco)
   end
 
   def create
-    staffco = Staffco.create(staffco_params)
+    staffco = Staffco.create(staffco_params.merge(region: current_user.region))
     if staffco.persisted?
       redirect_to staffcos_path, notice: 'The staffing company was successfully created'
     else
       errors = staffco.errors.full_messages
       render json: { message: errors }, status: 422
+    end
+  end
+
+  def destroy
+    if Staffco.find(params[:id]).destroy
+      redirect_to staffcos_path, notice: 'Staffing Company was successfully removed.'
+    else
+      redirect_to staffcos_path, notice: 'Something went wrong, Staffing Company not removed.'
     end
   end
 
